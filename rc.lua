@@ -391,6 +391,10 @@ globalkeys = awful.util.table.join(
 	awful.key({ }, "XF86AudioPlay",function () awful.util.spawn("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause") end),
 	awful.key({ }, "XF86AudioStop",function () awful.util.spawn("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop") end),
 
+	-- Brightness
+	awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("xbacklight -10") end),
+	awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("xbacklight +10") end),
+
     -- Tag browsing
     awful.key({ modkey }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey }, "Right",  awful.tag.viewnext       ),

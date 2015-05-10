@@ -4,6 +4,9 @@ Personal Awesome WM configuration
 forked from [copycat-killer/awesome-copycats](https://github.com/copycat-killer/awesome-copycats)
 
 # Installation guide
+## Install dependencies
+`sudo yum install -y xbacklight`
+
 ## 1 - Go to configs folder
 `cd ~/.config`
 
