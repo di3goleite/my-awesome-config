@@ -11,7 +11,7 @@ forked from [copycat-killer/awesome-copycats](https://github.com/copycat-killer/
 `git clone https://github.com/di3goleite/my-awesome-config awesome`
 
 ## 3 - Fetch updates and dependencies
-`sh start.sh`
+`sh init.sh`
 
 ## 4 - Reload Awesome WM
 `Ctrl + Super + R`
