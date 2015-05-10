@@ -1,8 +1,8 @@
 --[[
-                                             
-     Powerarrow Darker Awesome WM config 2.0 
-     github.com/copycat-killer               
-                                             
+
+     Powerarrow Darker Awesome WM config 2.0
+     github.com/copycat-killer
+
 --]]
 
 -- {{{ Required libraries
@@ -63,7 +63,7 @@ beautiful.init(os.getenv("HOME") .. "/.config/awesome/powerarrow-darker/theme.lu
 -- common
 modkey     = "Mod4"
 altkey     = "Mod1"
-terminal   = "urxvtc" or "xterm"
+terminal   = "gnome-terminal"
 editor     = os.getenv("EDITOR") or "nano" or "vi"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -214,23 +214,20 @@ batwidget = lain.widgets.bat({
     end
 })
 
+-- Audio Master Control
+-- define your volume control
+volumecfg = volume_control({channel="Master"})
+
+-- open alsamixer in terminal on middle-mouse
+volumecfg.widget:buttons(awful.util.table.join(
+    volumecfg.widget:buttons(),
+	awful.button({ }, 2,
+		function() awful.util.spawn(terminal .. " -x alsamixer") end)
+))
+
 -- ALSA volume
 volicon = wibox.widget.imagebox(beautiful.widget_vol)
-volumewidget = lain.widgets.alsa({
-    settings = function()
-        if volume_now.status == "off" then
-            volicon:set_image(beautiful.widget_vol_mute)
-        elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(beautiful.widget_vol_no)
-        elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_image(beautiful.widget_vol_low)
-        else
-            volicon:set_image(beautiful.widget_vol)
-        end
-
-        widget:set_text(" " .. volume_now.level .. "% ")
-    end
-})
+volicon:set_image(beautiful.widget_vol)
 
 -- Net
 neticon = wibox.widget.imagebox(beautiful.widget_net)
@@ -247,8 +244,8 @@ netwidget = lain.widgets.net({
 spr = wibox.widget.textbox(' ')
 arrl = wibox.widget.imagebox()
 arrl:set_image(beautiful.arrl)
-arrl_dl = separators.arrow_left(beautiful.bg_focus, "alpha") 
-arrl_ld = separators.arrow_left("alpha", beautiful.bg_focus) 
+arrl_dl = separators.arrow_left(beautiful.bg_focus, "alpha")
+arrl_ld = separators.arrow_left("alpha", beautiful.bg_focus)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -329,7 +326,7 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the upper right
     local right_layout_toggle = true
-    local function right_layout_add (...)  
+    local function right_layout_add (...)
         local arg = {...}
         if right_layout_toggle then
             right_layout:add(arrl_ld)
@@ -344,13 +341,12 @@ for s = 1, screen.count() do
         end
         right_layout_toggle = not right_layout_toggle
     end
-    
+
     right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(spr)
     right_layout:add(arrl)
-    right_layout_add(mpdicon, mpdwidget)
-    right_layout_add(volicon, volumewidget)
+	right_layout_add(volicon, volumecfg.widget)
     --right_layout_add(mailicon, mailwidget)
     right_layout_add(memicon, memwidget)
     right_layout_add(cpuicon, cpuwidget)
@@ -384,6 +380,10 @@ globalkeys = awful.util.table.join(
     -- Take a screenshot
     -- https://github.com/copycat-killer/dots/blob/master/bin/screenshot
     awful.key({ altkey }, "p", function() os.execute("screenshot") end),
+
+	-- Multimedia
+	awful.key({ }, "XF86AudioLowerVolume", function () awful.util.spawn("amixer -q set Master 5%-") end),
+	awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer -q set Master 5%+") end),
 
     -- Tag browsing
     awful.key({ modkey }, "Left",   awful.tag.viewprev       ),
@@ -474,52 +474,7 @@ globalkeys = awful.util.table.join(
     awful.key({ altkey,           }, "c",      function () lain.widgets.calendar:show(7) end),
     awful.key({ altkey,           }, "h",      function () fswidget.show(7) end),
 
-    -- ALSA volume control
-    awful.key({ altkey }, "Up",
-        function ()
-            os.execute(string.format("amixer -c %s set %s 1+", volumewidget.card, volumewidget.channel))
-            volumewidget.update()
-        end),
-    awful.key({ altkey }, "Down",
-        function ()
-            os.execute(string.format("amixer -c %s set %s 1-", volumewidget.card, volumewidget.channel))
-            volumewidget.update()
-        end),
-    awful.key({ altkey }, "m",
-        function ()
-            os.execute(string.format("amixer -c %s set %s toggle", volumewidget.card, volumewidget.channel))
-            --os.execute(string.format("amixer set %s toggle", volumewidget.channel))
-            volumewidget.update()
-        end),
-    awful.key({ altkey, "Control" }, "m",
-        function ()
-            os.execute(string.format("amixer -c %s set %s 100%%", volumewidget.card, volumewidget.channel))
-            volumewidget.update()
-        end),
-
-    -- MPD control
-    awful.key({ altkey, "Control" }, "Up",
-        function ()
-            awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
-            mpdwidget.update()
-        end),
-    awful.key({ altkey, "Control" }, "Down",
-        function ()
-            awful.util.spawn_with_shell("mpc stop || ncmpc stop || pms stop")
-            mpdwidget.update()
-        end),
-    awful.key({ altkey, "Control" }, "Left",
-        function ()
-            awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
-            mpdwidget.update()
-        end),
-    awful.key({ altkey, "Control" }, "Right",
-        function ()
-            awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
-            mpdwidget.update()
-        end),
-
-    -- Copy to clipboard
+	-- Copy to clipboard
     awful.key({ modkey }, "c", function () os.execute("xsel -p -o | xsel -i -b") end),
 
     -- User programs
