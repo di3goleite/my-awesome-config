@@ -13,4 +13,7 @@ forked from [copycat-killer/awesome-copycats](https://github.com/copycat-killer/
 ## 3 - Fetch updates and dependencies
 `sh start.sh`
 
-## 4 - ENJOY!  :)
+## 4 - Reload Awesome WM
+`Ctrl + Super + R`
+
+## 5 - ENJOY!  :)
