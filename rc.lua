@@ -15,6 +15,7 @@ local beautiful = require("beautiful")
 local naughty   = require("naughty")
 local drop      = require("scratchdrop")
 local lain      = require("lain")
+local volume_control = require("volume-control")
 -- }}}
 
 -- {{{ Error handling
