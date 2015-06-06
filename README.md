@@ -11,7 +11,7 @@ forked from [copycat-killer/awesome-copycats](https://github.com/copycat-killer/
 `cd ~/.config`
 
 ## 2 - Clone the project
-`git clone https://github.com/di3goleite/my-awesome-config awesome`
+`git clone --recursive https://github.com/di3goleite/my-awesome-config awesome`
 
 ## 3 - Fetch updates and dependencies
 `sh init.sh`
